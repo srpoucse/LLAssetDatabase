@@ -11,7 +11,10 @@
 
 @class LLAsset, LLAssetGroup, LLAssetLocation, LLAssetURL;
 
-@interface LLAssetIndexer : NSOperation
+@interface LLAssetIndexer : NSOperation {
+	__block int numberOfChanges;
+    NSAutoreleasePool *autoReleasePool;
+}
 
 -(id)initWithAssetGroup:(ALAssetsGroup *)assetsGroup;
 -(void)saveContext;
@@ -23,5 +26,8 @@
 @property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (readonly) BOOL isExecuting;
 @property (readonly) BOOL isFinished;
+@property (nonatomic, readonly) NSMutableIndexSet *illegalIndexes;
+
+-(NSArray *)existingAssetsForGroup:(LLAssetGroup *)group;
 
 @end

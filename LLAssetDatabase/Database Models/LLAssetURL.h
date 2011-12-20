@@ -19,8 +19,11 @@
 
 
 +(NSArray *)LLAssetURLArrayWithALAssetURLDictionary:(NSDictionary *)assetURLs managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
++(NSSet *)LLAssetURLSetWithALAssetURLDictionary:(NSDictionary *)assetURLs managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 +(LLAssetURL *)LLAssetURLWithALAssetURL:(NSString *)assetURL type:(NSString *)URLType managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 +(BOOL)doesALAssetURLExist:(NSString *)assetURL managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 +(LLAssetURL *)LLAssetURLForALAssetURL:(NSString *)assetURL managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
++(LLAssetURL *)createLLAssetURLWithALAssetURL:(NSString *)assetURL type:(NSString *)URLType managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
++(NSArray *)allAssetURLS:(NSManagedObjectContext *)managedObjectContext;
 
 @end

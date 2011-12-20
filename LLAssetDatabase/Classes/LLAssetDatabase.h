@@ -19,17 +19,25 @@
 #import "LLAssetLocation.h"
 #import "LLAssetURL.h"
 
+#import "LLAssetFetcher.h"
+
 
 @interface LLAssetDatabase : NSObject
 
 @property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (readonly, strong, nonatomic) NSOperationQueue *operationQueue;
+//Use a private ALAssetsLibrary instance, so that the indexer does not interfere with other asset requests 
+@property (nonatomic, readonly) ALAssetsLibrary *indexingLibrary;
 
-- (void)saveContext;
+
++(LLAssetDatabase *)database;
+
+-(void)saveContext;
 -(void)index;
 
 +(NSURL *)applicationDocumentsDirectory;
 +(NSPersistentStoreCoordinator *)persistentStoreCoordinator;
 +(NSManagedObjectModel *)managedObjectModel;
+
 
 @end

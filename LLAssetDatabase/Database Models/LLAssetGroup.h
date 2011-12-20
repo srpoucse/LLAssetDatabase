@@ -23,6 +23,8 @@
 +(BOOL)doesALAssetsGroupExist:(ALAssetsGroup *)assetsGroup managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 +(LLAssetGroup *)LLAssetsGroupForALAssetsGroup:(ALAssetsGroup *)assetsGroup managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
+-(NSUInteger)numberOfAssets;
+
 @end
 
 @interface LLAssetGroup (CoreDataGeneratedAccessors)

@@ -24,7 +24,7 @@
 +(LLAsset *)LLAssetWithALAsset:(ALAsset *)asset managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 +(BOOL)doesALAssetExist:(ALAsset *)asset managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 +(LLAsset *)LLAssetForALAsset:(ALAsset *)asset managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
-
++(LLAsset *)createLLAssetWithALAsset:(ALAsset *)asset managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 @end
 
 @interface LLAsset (CoreDataGeneratedAccessors)

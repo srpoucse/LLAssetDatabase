@@ -87,4 +87,11 @@
 	return nil;
 }
 
+-(NSUInteger)numberOfAssets {
+    return [[self assets] count];
+}
+
+
+
+
 @end

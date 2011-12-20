@@ -12,6 +12,7 @@
 
 @synthesize managedObjectContext = __managedObjectContext;
 @synthesize operationQueue = __operationQueue;
+@synthesize indexingLibrary = __indexingLibrary;
 
 - (void)dealloc
 {
@@ -20,28 +21,72 @@
 	[__operationQueue cancelAllOperations];
 	[__operationQueue release];
 	
+	[__indexingLibrary release];
+	
     [super dealloc];
 }
 
--(void)index {
-	ALAssetsLibrary *library = [ALAssetsLibrary sharedLibrary];
-	[library enumerateGroupsWithTypes:ALAssetsGroupAll usingBlock:^(ALAssetsGroup *group, BOOL *stop) {
-		
-		if (group) {
-			LLAssetIndexer *assetIndexer = [[LLAssetIndexer alloc] initWithAssetGroup:group];
-			
-			[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(mergeChanges:) name:NSManagedObjectContextDidSaveNotification object:[assetIndexer managedObjectContext]];
-			
-			[[self operationQueue] addOperation:assetIndexer];
-			[assetIndexer release];
-		}
-		
-	} failureBlock:^(NSError *error) {
-		
-	}];
++(LLAssetDatabase *)database {
+	static dispatch_once_t onceToken;
+	static LLAssetDatabase *shared = nil;
+	dispatch_once(&onceToken, ^{
+		shared = [[LLAssetDatabase alloc] init];
+	});	
+	return shared;
 }
 
+-(ALAssetsLibrary *)indexingLibrary {
+	if (__indexingLibrary) {
+		return __indexingLibrary;
+	}
+	
+	__indexingLibrary = [[ALAssetsLibrary alloc] init];
+	return __indexingLibrary;
+}
+
+-(void)index {
+	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+       	[[self indexingLibrary] enumerateGroupsWithTypes:ALAssetsGroupAll usingBlock:^(ALAssetsGroup *group, BOOL *stop) {
+            
+            if (group) {
+                LLAssetGroup *assetGroup = [LLAssetGroup LLAssetGroupWithALAssetsGroup:group managedObjectContext:[self managedObjectContext]];
+                
+                
+                NSLog(@"LLASSETS %@ : %i - ALAssets %@ : %i", [assetGroup name], [assetGroup numberOfAssets], [group valueForProperty:ALAssetsGroupPropertyName], [group numberOfAssets]);
+                if ([assetGroup numberOfAssets] != [group numberOfAssets]) {
+
+                    LLAssetIndexer *assetIndexer = [[LLAssetIndexer alloc] initWithAssetGroup:group];
+                    
+                    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(mergeChanges:) name:NSManagedObjectContextDidSaveNotification object:[assetIndexer managedObjectContext]];
+                    
+                    if ([[group valueForProperty:ALAssetsGroupPropertyType] intValue] == ALAssetsGroupSavedPhotos) {
+                        [assetIndexer setQueuePriority:NSOperationQueuePriorityVeryHigh];				
+                    }
+                    else if ([[group valueForProperty:ALAssetsGroupPropertyType] intValue] == ALAssetsGroupPhotoStream) {
+                        [assetIndexer setQueuePriority:NSOperationQueuePriorityHigh];
+                    }
+                    else {
+                        [assetIndexer setQueuePriority:NSOperationQueuePriorityVeryLow];
+                    }
+                    [[self operationQueue] addOperation:assetIndexer];
+
+                    [assetIndexer release];   
+                }
+                else {
+                }
+            }
+            
+        } failureBlock:^(NSError *error) {
+            
+        }]; 
+    });
+}
+
+
+
+
 -(void)mergeChanges:(NSNotification *)notification {
+	NSLog(@"MERGE CHANGES IN ASSET DATABASE");
 	[[self managedObjectContext] mergeChangesFromContextDidSaveNotification:notification];
 }
 
@@ -51,7 +96,17 @@
 	}
 	
 	__operationQueue = [[NSOperationQueue alloc] init];
+	[__operationQueue setMaxConcurrentOperationCount:3];
+	
+	[__operationQueue addObserver:self forKeyPath:@"operationCount" options:NSKeyValueObservingOptionNew context:NULL];
+	
 	return __operationQueue;
+}
+
+-(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+	if ([[self operationQueue] operationCount] == 0) {
+	NSLog(@"OPERATION FINISHED");
+	}
 }
 
 - (void)saveContext

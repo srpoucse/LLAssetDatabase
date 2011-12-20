@@ -27,13 +27,31 @@
 	return array;
 }
 
++(NSSet *)LLAssetURLSetWithALAssetURLDictionary:(NSDictionary *)assetURLs managedObjectContext:(NSManagedObjectContext *)managedObjectContext {
+    NSMutableSet *set = [[[NSMutableSet alloc] init] autorelease];
+
+	for (NSString *key in [assetURLs allKeys]) {
+		NSString *URL = [[assetURLs objectForKey:key] absoluteString];
+            
+		LLAssetURL *assetURL = [LLAssetURL LLAssetURLWithALAssetURL:URL type:key managedObjectContext:managedObjectContext];
+		[set addObject:assetURL];
+	}
+	return set;
+}
+
+
 +(LLAssetURL *)LLAssetURLWithALAssetURL:(NSString *)assetURL type:(NSString *)URLType managedObjectContext:(NSManagedObjectContext *)managedObjectContext {
 
 	if ([LLAssetURL doesALAssetURLExist:assetURL managedObjectContext:managedObjectContext]) {
 		return [LLAssetURL LLAssetURLForALAssetURL:assetURL managedObjectContext:managedObjectContext];
 	}
 	
-	LLAssetURL *llAssetURL = [NSEntityDescription insertNewObjectForEntityForName:@"LLAssetURL" inManagedObjectContext:managedObjectContext];
+	LLAssetURL *llAssetURL = [LLAssetURL createLLAssetURLWithALAssetURL:assetURL type:URLType managedObjectContext:managedObjectContext];
+	return llAssetURL;
+}
++(LLAssetURL *)createLLAssetURLWithALAssetURL:(NSString *)assetURL type:(NSString *)URLType managedObjectContext:(NSManagedObjectContext *)managedObjectContext {
+    
+    LLAssetURL *llAssetURL = [NSEntityDescription insertNewObjectForEntityForName:@"LLAssetURL" inManagedObjectContext:managedObjectContext];
 	[llAssetURL setType:URLType];
 	[llAssetURL setUrl:assetURL];
 	
@@ -81,6 +99,18 @@
 	}
 	
 	return nil;
+}
+
++(NSArray *)allAssetURLS:(NSManagedObjectContext *)managedObjectContext {
+    NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"LLAssetURL"];
+		
+	NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"url" ascending:YES];
+	[fetchRequest setSortDescriptors:[NSArray arrayWithObject:sortDescriptor]];
+	
+	NSError *error;
+	NSArray *assetURLS = [managedObjectContext executeFetchRequest:fetchRequest error:&error];
+		
+	return assetURLS;
 }
 
 @end

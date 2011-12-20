@@ -26,6 +26,7 @@
 		3A9079281485001D001BEC15 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A9079271485001D001BEC15 /* AssetsLibrary.framework */; };
 		3A90792A14850023001BEC15 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A90792914850023001BEC15 /* CoreData.framework */; };
 		3A90792C1485002A001BEC15 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A90792B14850029001BEC15 /* CoreLocation.framework */; };
+		3A9079431485922E001BEC15 /* LLAssetFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A9079421485922B001BEC15 /* LLAssetFetcher.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -61,6 +62,8 @@
 		3A9079271485001D001BEC15 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		3A90792914850023001BEC15 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		3A90792B14850029001BEC15 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		3A90794114859228001BEC15 /* LLAssetFetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LLAssetFetcher.h; sourceTree = "<group>"; };
+		3A9079421485922B001BEC15 /* LLAssetFetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LLAssetFetcher.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -155,6 +158,8 @@
 				3A9079111484FFE7001BEC15 /* LLAssetDatabase.m */,
 				3A9079121484FFE7001BEC15 /* LLAssetIndexer.h */,
 				3A9079131484FFE7001BEC15 /* LLAssetIndexer.m */,
+				3A90794114859228001BEC15 /* LLAssetFetcher.h */,
+				3A9079421485922B001BEC15 /* LLAssetFetcher.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -249,6 +254,7 @@
 				3A9079241484FFE7001BEC15 /* LLAssetGroup.m in Sources */,
 				3A9079251484FFE7001BEC15 /* LLAssetLocation.m in Sources */,
 				3A9079261484FFE7001BEC15 /* LLAssetURL.m in Sources */,
+				3A9079431485922E001BEC15 /* LLAssetFetcher.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -350,6 +356,7 @@
 				3A9079051484FF9B001BEC15 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 

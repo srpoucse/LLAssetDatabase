@@ -24,8 +24,11 @@
 
 		return ss;
 	}
-	
-	NSDate *date = [asset valueForProperty:ALAssetPropertyDate];
+    
+	return [LLAsset createLLAssetWithALAsset:asset managedObjectContext:managedObjectContext];
+}
++(LLAsset *)createLLAssetWithALAsset:(ALAsset *)asset managedObjectContext:(NSManagedObjectContext *)managedObjectContext {
+    NSDate *date = [asset valueForProperty:ALAssetPropertyDate];
 	NSNumber *duration = [asset valueForProperty:ALAssetPropertyDuration];
 	NSNumber *orientation = [asset valueForProperty:ALAssetPropertyOrientation];
 	NSDictionary *urls = [asset valueForProperty:ALAssetPropertyURLs];
@@ -34,7 +37,7 @@
 	
 	LLAsset *llasset = [NSEntityDescription insertNewObjectForEntityForName:@"LLAsset" inManagedObjectContext:managedObjectContext];
 	LLAssetLocation *assetLocation = [LLAssetLocation LLAssetLocationWithCLLocation:location managedObjectContext:managedObjectContext];
-	NSArray *assetURLS = [LLAssetURL LLAssetURLArrayWithALAssetURLDictionary:urls managedObjectContext:managedObjectContext];
+	NSSet *assetURLS = [LLAssetURL LLAssetURLSetWithALAssetURLDictionary:urls managedObjectContext:managedObjectContext];
 	
 	[llasset setDate:date];
 	[llasset setType:type];
@@ -44,12 +47,11 @@
 		[llasset setDuration:duration];	
 	}	
 	
-	[llasset setUrls:[NSSet setWithArray:assetURLS]];
+	[llasset setUrls:assetURLS];
 	[llasset setLocation:assetLocation];
-
+    
 	return llasset;
 }
-
 
 +(BOOL)doesALAssetExist:(ALAsset *)asset managedObjectContext:(NSManagedObjectContext *)managedObjectContext {
 	NSDictionary *urls = [asset valueForProperty:ALAssetPropertyURLs];

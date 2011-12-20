@@ -26,6 +26,11 @@
 	LLAssetDatabase *database =	[[LLAssetDatabase alloc] init];
 	[database index];
 	
+	NSDate *startDate = [NSDate dateWithTimeIntervalSinceNow:-2400000];
+	NSDate *endDate = [NSDate date];
+			
+	[database assetsBetweenDate:startDate endDate:endDate];
+	
     [self.window makeKeyAndVisible];
     return YES;
 }
